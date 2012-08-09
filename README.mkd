@@ -4,4 +4,4 @@ I was tired of copying the same half-dozen files every time I worked on a new pr
 
 To use this project, you will need to modify ".VendorID" and ".ProductID" on lines 56 and 57 of Descriptors.h to match your end device. This change will also need to be reflected in the makefile definition of "make update."
 
-Additionally, to accurately reflect the branding of your hardware, you will need to modify all instances of "USB_Descriptor_String_t."
+Additionally, to accurately reflect the branding of your hardware, you will need to modify all instances of "USB_Descriptor_String_t" in Descriptors.h.
