@@ -2,14 +2,13 @@
 
 int main(void){
 	USB_ConfigureClock();
-	PORTR.DIRSET = 1 << 1;
-	PORTR.OUTSET = 1 << 1;
 	USB_Init();
-	sei();	
+	USB.INTCTRLA = USB_BUSEVIE_bm | USB_INTLVL_MED_gc;  
+	USB.INTCTRLB = USB_TRNIE_bm | USB_SETUPIE_bm;
+	PMIC.CTRL = PMIC_LOLVLEN_bm | PMIC_MEDLVLEN_bm;
+	sei();
 
 	for (;;){
-		USB_Evt_Task();
-		USB_Task();
 	}
 
 }
