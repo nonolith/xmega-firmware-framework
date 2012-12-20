@@ -5,8 +5,8 @@ from flash import *
 
 import json, base64
 
-DEVICE_MATCH="com.nonolithlabs.cee"
-DEVICE="Nonolith CEE"
+DEVICE_MATCH="com.nonolithlabs.framework"
+DEVICE="Nonolith Framework"
 HWVERSION="1.0"
 MEMSIZE=32767
 PAGESIZE=256
