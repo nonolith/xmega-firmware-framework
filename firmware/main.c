@@ -3,7 +3,7 @@
 int main(void){
 	USB_ConfigureClock();
 	USB_Init();
-	USB.INTCTRLA = USB_BUSEVIE_bm | USB_INTLVL_MED_gc;  
+	USB.INTCTRLA = USB_BUSEVIE_bm | USB_INTLVL_MED_gc;
 	USB.INTCTRLB = USB_TRNIE_bm | USB_SETUPIE_bm;
 	PMIC.CTRL = PMIC_LOLVLEN_bm | PMIC_MEDLVLEN_bm;
 	sei();
@@ -13,11 +13,10 @@ int main(void){
 
 }
 
-#define xstringify(s) stringify(s)
 #define stringify(s) #s
 
-const char PROGMEM hwversion[] = xstringify(HW_VERSION);
-const char PROGMEM fwversion[] = xstringify(FW_VERSION);
+const char PROGMEM hwversion[] = stringify(HW_VERSION);
+const char PROGMEM fwversion[] = stringify(FW_VERSION);
 
 uint8_t usb_cmd = 0;
 uint8_t cmd_data = 0;
@@ -35,9 +34,26 @@ bool EVENT_USB_Device_ControlRequest(USB_Request_Header_t* req){
 				}else if (req->wIndex == 1){
 					USB_ep0_send_progmem((uint8_t*)fwversion, sizeof(fwversion));
 				}
-				
 				return true;
-
+			case 0x08:
+				* ((uint8_t *) req->wIndex) = req->wValue;
+				USB_ep0_send(0);
+				return true;
+			case 0x09:
+				ep0_buf_in[0] = * ((uint8_t *) req->wIndex);
+				USB_ep0_send(1);
+				return true;
+			case 0x16:
+				* ((uint16_t *) req->wIndex) = req->wValue;
+				USB_ep0_send(0);
+				return true;
+			case 0x17:{
+				uint16_t *addr;
+				addr = (uint16_t *) req->wIndex;
+				ep0_buf_in[0] = *addr & 0xFF;
+				ep0_buf_in[1] = *addr >> 8;
+				USB_ep0_send(2);}
+				return true;
 			// read EEPROM	
 			case 0xE0: 
 				eeprom_read_block(ep0_buf_in, (void*)(req->wIndex*64), 64);
